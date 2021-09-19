@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div{
+            background-color: red;
+            width: 200px;
+            height: 200px;
+            display: block;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <p>HOŞGELDİNİZ, <%= gonder.name %></p>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    const socket = io();
+    let idnum1 = -1;
+    let idnum0 = "";
+    socket.on("Create",(howmuch,positions,objects,ids)=>{
+        console.log(ids.length);
+        //console.log(howmuch)
+        for(var i = 0;i<ids.length; i++){
+        if(objects[i] === undefined || objects[i] == false){
+        let red = document.createElement('div');
+        //red.setAttribute("id","deneme");
+        red.setAttribute("id","b"+ids[i].toString());
+        //console.log("merhaba");
+        red.style.top = 0;
+        red.style.left = 0;
+        red.style.position = 'absolute';
+        document.body.appendChild(red);
+        socket.emit("Updatepos",red.style.left,red.style.top,i)
+        }
+        else if(objects[i] == true && !document.getElementById("b"+ids[i])){
+           console.log("oluştur"+i);
+            let deneme1 = document.createElement('div');
+            deneme1.setAttribute("id","b"+ids[i].toString());
+            deneme1.style.top = positions[i].posy;
+            deneme1.style.left = positions[i].posx;
+            deneme1.style.position = 'absolute';
+            document.body.appendChild(deneme1);
+        }
+    }
+    });
+    socket.on("Self1",(amount,ids)=>{
+        idnum0 = ids
+        idnum1 = amount
+        console.log(amount);
+    })
+    window.addEventListener("keydown",(e)=>{
+        let deneme = document.getElementById("b"+idnum0.toString());
+            switch(e.key){
+                case 'w':
+                    deneme.style.top = parseInt(deneme.style.top) + 10 + 'px';
+                    //console.log(idnum);
+                    socket.emit("ButtonOnePressed","w",idnum1,deneme.style.left,deneme.style.top);
+                    break;
+                case 'a':
+                    deneme.style.left = parseInt(deneme.style.left) - 10 + 'px';
+                    socket.emit("ButtonOnePressed","a",idnum1,deneme.style.left,deneme.style.top);
+                    break;
+                case 's':
+                    deneme.style.top = parseInt(deneme.style.top) - 10 + 'px';
+                    socket.emit("ButtonOnePressed","s",idnum1,deneme.style.left,deneme.style.top);
+                    break;
+                case 'd':
+                    deneme.style.left = parseInt(deneme.style.left) + 10 + 'px';
+                    socket.emit("ButtonOnePressed","d",idnum1,deneme.style.left,deneme.style.top);
+                    break;
+                case 'w'&&'d':
+                    deneme.style.left = parseInt(deneme.style.left) + 10 + 'px';
+                    deneme.style.top = parseInt(deneme.style.top) + 10 + 'px';
+                    socket.emit("ButtonOnePressed","d",idnum1,deneme.style.left,deneme.style.top,idnum0);
+                    break;
+            }
+        });
+            socket.on("ButtonPressed",(but,which,positions,ids)=>{
+                let deneme2 = document.getElementById("b"+ids.toString());
+                switch (but) {
+                case 'd':
+                    deneme2.style.left = parseInt(deneme2.style.left) + 10 + 'px';
+                    break;
+                case 's':
+                    deneme2.style.top = parseInt(deneme2.style.top) - 10 + 'px';
+                    break;
+                case 'a':
+                    deneme2.style.left = parseInt(deneme2.style.left) - 10 + 'px';
+                    break; 
+                case 'w':
+                    deneme2.style.top = parseInt(deneme2.style.top) + 10 + 'px';
+                    break;       
+                }
+                
+            
+            });
+            socket.on("DeleteUser",(id)=>{
+                let deleted = document.getElementById("b"+id.toString());
+                deleted.remove();
+            })
+    </script>
+</body>
+</html>

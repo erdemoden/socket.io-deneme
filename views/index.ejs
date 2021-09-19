@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOŞGELDİNİZ</title>
+    <style>
+        .menu{
+            float: left;
+            display: flex;
+            background-color: black;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+        .menuyazi{
+            float: left;
+            color: white;
+            margin-left: 20px;
+        }
+        .menuyazi:hover{
+            color:deepskyblue;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <p class="menuyazi">To Login</p>
+        <p class="menuyazi">To Sign-Up</p>
+    </div>
+    <script>
+        document.getElementsByClassName("menuyazi")[1].addEventListener("click",()=>{
+            window.open("/sign-up","_self");
+        });
+        document.getElementsByClassName("menuyazi")[0].addEventListener("click",()=>{
+            window.open("/login","_self");
+        });
+
+    </script>
+</body>
+</html>
